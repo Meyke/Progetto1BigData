@@ -27,6 +27,8 @@ public class TopNStocksMapper extends Mapper<LongWritable, Text, Text, Stock> {
 	public void map(LongWritable key, Text value, Context context)
 			throws IOException, InterruptedException {
 
+		if (value.toString().contains("ticker,open,close,adj_close,low,high,volume,date")) return; //per rimuovere l'header
+		
 		String line = value.toString();
 		String[] items = line.split(",");
 		
