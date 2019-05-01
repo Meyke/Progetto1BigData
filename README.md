@@ -33,7 +33,7 @@ bla bla bla
 
 ## Authors
 
-<img src="images/logo.png" width="500" height="700">
+<img src="images/logo.png" width="500" height="650" class="center">
 
 
 
