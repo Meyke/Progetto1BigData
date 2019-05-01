@@ -1,0 +1,11 @@
+job2/StockTrend.class
+job1/TopNStocksReducer.class
+job1/ComparatorePerData.class
+job2/MapperHistoricalStockPrice.class
+job1/StockToOutput.class
+job2/Job3Driver.class
+job1/TopNPriceChanges.class
+job1/Stock.class
+job2/ReducerJoin.class
+job2/MapperHistoricalStock.class
+job1/TopNStocksMapper.class
