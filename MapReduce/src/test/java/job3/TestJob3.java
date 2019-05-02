@@ -1,4 +1,4 @@
-package job2;
+package job3;
 
 import static org.junit.Assert.*;
 
@@ -16,9 +16,12 @@ import org.junit.Test;
 
 import job1.Stock;
 import job1.StockToOutput;
+import job3.MapperHistoricalStock;
+import job3.MapperHistoricalStockPrice;
+import job3.ReducerJoin;
 
 
-public class TestJob2 {
+public class TestJob3 {
 
 	
 	@Test
@@ -126,7 +129,7 @@ public class TestJob2 {
 				stock25,stock26,stock27,stock28,stock29,stock30, stock13, stock14, stock15,stock16,stock17,stock18,stock19,stock20);
 
 
-		ReduceDriver <Text, Text, Text, StockTrend> rd = new ReduceDriver<Text, Text, Text, StockTrend>();
+		ReduceDriver <Text, Text, Text, Text> rd = new ReduceDriver<Text, Text, Text, Text>();
 		rd = rd.withReducer(new ReducerJoin()); //Sets the reducer object to use for this test
 		rd.withInput(new Text("WAT"), values); // imposta l'imput da inviare al reducer setInput(K1 key, List<V1> values)
 		System.out.println(rd.run().toString());

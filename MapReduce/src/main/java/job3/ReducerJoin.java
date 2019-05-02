@@ -1,4 +1,4 @@
-package job2;
+package job3;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import job1.StockToOutput;
 // AHH,11.6499996185303,2013-05-13,stockprice
 // AHH,11.5299997329712,2013-05-14,stockprice
 
-public class ReducerJoin extends Reducer<Text, Text, Text, StockTrend> {
+public class ReducerJoin extends Reducer<Text, Text, Text, Text> {
 
 	// attenzione a non inizializzarli qui, ma dentro il metodo reduce. Infatti l'oggetto reducer viene creato SOLO all'inizio del task
 	// mentre il metodo reduce viene invocato per ogni riga in input del reducer.
@@ -67,16 +67,10 @@ public class ReducerJoin extends Reducer<Text, Text, Text, StockTrend> {
 			}
 		}
 		
-		System.out.println("___________");
-		System.out.println("COMPANY NAME" + companyName);
-		System.out.println("TICKER " + key.toString());
-		System.out.println("___________");
-		
 		List<Integer> trendTriennio = trendStock3years(quotazioni2016, quotazioni2017, quotazioni2018);
 
 		//Write output
-		StockTrend stocktrend = new StockTrend(key, new IntWritable(trendTriennio.get(0)), new IntWritable(trendTriennio.get(1)), new IntWritable(trendTriennio.get(2)), companyName, sector);
-		context.write(companyName, stocktrend);
+		context.write(key, new Text(trendTriennio.get(0)+","+trendTriennio.get(1)+","+trendTriennio.get(2)+","+companyName+","+sector));
 	}
 
 
