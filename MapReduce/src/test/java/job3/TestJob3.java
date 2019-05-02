@@ -23,7 +23,7 @@ import job3.ReducerJoin;
 
 public class TestJob3 {
 
-	
+
 	@Test
 	public void testMapperHistoricalStockPrice() throws Exception {
 
@@ -51,19 +51,19 @@ public class TestJob3 {
 
 	}
 
-	
+
 
 	@Test
-	public void testReducer() throws Exception {
+	public void testReducerJoin() throws Exception {
 
 		/*
 		 *    WAT,NYSE,WATERS CORPORATION,CAPITAL GOODS,BIOTECHNOLOGY: LABORATORY ANALYTICAL INSTRUMENTS
 		 * 
 		 */
-		
+
 		/*
 		 * 
-           
+
            WAT,195.690002441406,2018-01-02
            WAT,197.770004272461,2018-01-03
            WAT,199.660003662109,2018-01-04
@@ -98,9 +98,9 @@ public class TestJob3 {
 		Text stock8 = new Text("stockprice,WAT,15.8500003814697,2017-12-18");
 		Text stock9 = new Text("stockprice,WAT,15.4700002670288,2017-12-19");
 		Text stock10 = new Text("stockprice,WAT,15.4899997711182,2017-12-20");
-		
+
 		Text company = new Text("companyStock,WAT,WATERS CORPORATION,CAPITAL GOODS"); //aggiustare mapper per nome di certe compagnie
-		
+
 		Text stock11 = new Text("stockprice,WAT,195.690002441406,2018-01-02");
 		Text stock12 = new Text("stockprice,WAT,197.770004272461,2018-01-03");
 		Text stock13 = new Text("stockprice,WAT,199.660003662109,2018-01-04");
@@ -121,7 +121,7 @@ public class TestJob3 {
 		Text stock28 = new Text("stockprice,WAT,218.699996948242,2018-01-29");
 		Text stock29 = new Text("stockprice,WAT,214.869995117188,2018-01-30");
 		Text stock30 = new Text("stockprice,WAT,215.610000610352,2018-01-31");
-		
+
 
 		List<Text> values = new ArrayList<Text>();
 		Collections.addAll(values, stock1, stock2, stock3, stock4, stock5, stock6, stock7, stock8, stock9, stock10, company, 
@@ -134,6 +134,55 @@ public class TestJob3 {
 		rd.withInput(new Text("WAT"), values); // imposta l'imput da inviare al reducer setInput(K1 key, List<V1> values)
 		System.out.println(rd.run().toString());
 
+	}
+
+	@Test
+	public void testReducerGenerateCouple2() throws Exception {
+
+
+
+		// WATT	-25,-18,-17,ENERGOUS CORPORATION,TECHNOLOGY
+
+		List<Text> values = new ArrayList<Text>();
+
+		StockTrend stocktrend1 = new StockTrend(
+				new Text(new Text("WATT")), 
+				new IntWritable(-25), 
+				new IntWritable(-18), 
+				new IntWritable(-17), 
+				new Text("ENERGOUS CORPORATION"), 
+				new Text("TECHNOLOGY"));
+		
+		StockTrend stocktrend2 = new StockTrend(
+				new Text(new Text("WATT")), 
+				new IntWritable(-25), 
+				new IntWritable(-18), 
+				new IntWritable(-17), 
+				new Text("ENERGOUS CORPORATION"), 
+				new Text("FITNESS")); 
+		
+		StockTrend stocktrend3 = new StockTrend(
+				new Text(new Text("ZNGA")), 
+				new IntWritable(-25), 
+				new IntWritable(-18), 
+				new IntWritable(-17), 
+				new Text("ZYNGA INC."), 
+				new Text("TECHNOLOGY")); 
+		
+		StockTrend stocktrend4 = new StockTrend(
+				new Text(new Text("DWAT")), 
+				new IntWritable(-25), 
+				new IntWritable(-18), 
+				new IntWritable(-17), 
+				new Text("ARROW DWA TACTICAL ETF"), 
+				new Text("N/A")); 
+
+		Collections.addAll(values, new Text("ENERGOUS CORPORATION"), new Text("ENERGOUS CORPORATION"), new Text("ZYNGA INC."), new Text("ARROW DWA TACTICAL ETF"));
+
+		ReduceDriver <StockTrend, Text, Text, Text> rd = new ReduceDriver<StockTrend, Text, Text, Text>();
+		rd = rd.withReducer(new GenerateCoupleReducer2()); //Sets the reducer object to use for this test
+		rd.withInput(stocktrend1, values); // imposta l'imput da inviare al reducer setInput(K1 key, List<V1> values)
+		System.out.println(rd.run().toString());
 	}
 
 

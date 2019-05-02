@@ -17,7 +17,7 @@ public class StockTrend implements WritableComparable{
 	private IntWritable trend2018;
 	private Text companyName; // a quale società appartiene questa azione
 	private Text sector;
-	
+
 	public StockTrend() {
 		this.ticker = new Text();
 		this.trend2016 = new IntWritable();
@@ -26,8 +26,8 @@ public class StockTrend implements WritableComparable{
 		this.companyName = new Text();
 		this.sector = new Text();
 	}
-	
-	
+
+
 
 	public StockTrend(Text ticker, IntWritable trend2016, IntWritable trend2017, IntWritable trend2018, Text companyName, Text sector) {
 		this.ticker = new Text(ticker.toString());
@@ -37,8 +37,8 @@ public class StockTrend implements WritableComparable{
 		this.companyName = new Text(companyName.toString());
 		this.sector = new Text(sector.toString());
 	}
-	
-	
+
+
 
 
 
@@ -51,7 +51,7 @@ public class StockTrend implements WritableComparable{
 	public void setTicker(Text ticker) {
 		this.ticker = ticker;
 	}
-	
+
 
 	public Text getCompanyName() {
 		return companyName;
@@ -98,8 +98,8 @@ public class StockTrend implements WritableComparable{
 	public void setTrend2018(IntWritable trend2018) {
 		this.trend2018 = trend2018;
 	}
-	
-	
+
+
 
 	public Text getSector() {
 		return sector;
@@ -131,8 +131,26 @@ public class StockTrend implements WritableComparable{
 		sector.write(out);
 	}
 
+
 	public int compareTo(Object o) {
-		return 0;
+		StockTrend trend2 = (StockTrend) o;
+
+		int cmp = -1;
+
+		// se hanno stesso trend nei tre anni allora li metto insieme nei values del reducer
+		if(getTrend2016().compareTo(trend2.getTrend2016()) == 0 && getTrend2017().compareTo(trend2.getTrend2017()) == 0 && getTrend2018().compareTo(trend2.getTrend2018()) == 0)
+			cmp = 0;
+
+		if (cmp!=0)
+			return cmp;
+
+		// tuttavia, devono avere diverso settore e nome
+		cmp = -1;
+		if(getCompanyName().compareTo(trend2.getCompanyName()) != 0 && getSector().compareTo(trend2.getSector()) != 0)
+			cmp = 0;	
+
+		return cmp;
+
 	}
 
 
@@ -152,10 +170,10 @@ public class StockTrend implements WritableComparable{
 	@Override
 	public boolean equals(Object obj) {
 		StockTrend that = (StockTrend) obj;
-		return this.trend2016.equals(that.getTrend2016()) &&
+		return  this.trend2016.equals(that.getTrend2016()) &&
 				this.trend2017.equals(that.getTrend2017()) &&
 				this.trend2018.equals(that.getTrend2018());
-				
+
 	}
 
 
@@ -168,10 +186,10 @@ public class StockTrend implements WritableComparable{
 
 
 
-	
-	
-	
-	
-	
+
+
+
+
+
 
 }
