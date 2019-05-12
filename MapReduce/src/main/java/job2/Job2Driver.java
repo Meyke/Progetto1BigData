@@ -53,17 +53,34 @@ public class Job2Driver extends Configured implements Tool {
 
 		job2.setJarByClass(Job2Driver.class);
 		job2.setMapperClass(Job2Mapper3.class);
-		job2.setReducerClass(FinalReducer.class);
+		job2.setReducerClass(Reducer2.class);
 		job2.setMapOutputKeyClass(Text.class);
 		job2.setMapOutputValueClass(Text.class);
 
 		FileInputFormat.addInputPath(job2, new Path(args[2]));
-		FileOutputFormat.setOutputPath(job2, new Path(args[2] + "/final"));
+		FileOutputFormat.setOutputPath(job2, new Path(args[2] + "/intermediate"));
 
 		job2.setOutputKeyClass(Text.class);
 		job2.setOutputValueClass(Text.class);
 
 		job2.waitForCompletion(true);
+		
+		conf = new Configuration();
+		Job job3 = Job.getInstance(conf);
+
+		job3.setJarByClass(Job2Driver.class);
+		job3.setMapperClass(Job2Mapper4.class);
+		job3.setReducerClass(FinalReducer.class);
+		job3.setMapOutputKeyClass(Text.class);
+		job3.setMapOutputValueClass(Text.class);
+
+		FileInputFormat.addInputPath(job3, new Path(args[2] + "/intermediate"));
+		FileOutputFormat.setOutputPath(job3, new Path(args[2] + "/final"));
+
+		job3.setOutputKeyClass(Text.class);
+		job3.setOutputValueClass(Text.class);
+
+		job3.waitForCompletion(true);
 
 		return 0;
 	}

@@ -14,7 +14,6 @@ import org.apache.hadoop.mapreduce.Mapper;
 public class Job2Mapper1 extends Mapper<LongWritable, Text, Text, Text>{
 	
 	private final int TICKER = 0;
-    private final int OPEN = 1;
     private final int CLOSE = 2;
     private final int VOLUME = 6;
     private final int DATE = 7;
@@ -30,17 +29,11 @@ public class Job2Mapper1 extends Mapper<LongWritable, Text, Text, Text>{
 	    	Date date = formatter.parse(parts[DATE]); 
 	    	calendar.setTime(date);
 	    	if(calendar.get(Calendar.YEAR) >= 2004) {
-	    		context.write(new Text(parts[TICKER]), new Text(parts[OPEN] + "," +
-	    				parts[CLOSE] + "," + parts[VOLUME] + "," + parts[DATE])); } 
+	    		context.write(new Text(parts[TICKER]), new Text(parts[CLOSE] + "," 
+	    				+ parts[VOLUME] + "," + parts[DATE])); } 
 	    	} catch(ParseException e) { 
 	    		// TODO Auto-generated catch block 
 	    		e.printStackTrace();
 		  }
-		 
-		/*
-		 * context.write(new Text(parts[TICKER]), new Text(parts[OPEN] + "," +
-		 * parts[CLOSE] + "," + parts[VOLUME] + "," + parts[DATE]));
-		 */
-        
 	}
 }
