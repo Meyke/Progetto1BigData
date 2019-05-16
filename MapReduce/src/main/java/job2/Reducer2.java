@@ -37,8 +37,8 @@ public class Reducer2 extends Reducer<Text, Text, Text, Text> {
 		}
 		List<Text> listaordinata = this.ordinaPerData(lista);
 		
-		double quotazione_inizio_anno = Double.parseDouble(listaordinata.get(0).toString().split(",")[1]);
-		double quotazione_fine_anno = Double.parseDouble(listaordinata.get(listaordinata.size()-1).toString().split(",")[1]);
+		double quotazione_inizio_anno = Double.parseDouble(listaordinata.get(0).toString().split(",")[0]);
+		double quotazione_fine_anno = Double.parseDouble(listaordinata.get(listaordinata.size()-1).toString().split(",")[0]);
 
 	
 		for(Text value : lista) {
