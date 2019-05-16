@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import org.apache.hadoop.io.FloatWritable;
 import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.WritableComparable;
 
@@ -16,7 +17,7 @@ public class Stock implements WritableComparable {
 	private FloatWritable close;
 	private FloatWritable low;
 	private FloatWritable high;
-	private IntWritable volume;
+	private LongWritable volume;
 	private Text data;
 	
 	
@@ -27,18 +28,18 @@ public class Stock implements WritableComparable {
 		this.close = new FloatWritable();
 		this.low = new FloatWritable();
 		this.high = new FloatWritable();
-		this.volume = new IntWritable();
+		this.volume = new LongWritable();
 		this.data = new Text();
 		
 	}
 
-	public Stock(Text ticker, FloatWritable close, FloatWritable low, FloatWritable high, IntWritable volume,
+	public Stock(Text ticker, FloatWritable close, FloatWritable low, FloatWritable high, LongWritable volume,
 			Text data) {
 		this.ticker = new Text(ticker.toString());
 		this.close = new FloatWritable(close.get());
 		this.low = new FloatWritable(low.get());
 		this.high = new FloatWritable(high.get());
-		this.volume = new IntWritable(volume.get());
+		this.volume = new LongWritable(volume.get());
 		this.data = new Text(data.toString());
 	}
 
@@ -75,11 +76,11 @@ public class Stock implements WritableComparable {
 		this.high = high;
 	}
 
-	public IntWritable getVolume() {
+	public LongWritable getVolume() {
 		return volume;
 	}
 
-	public void setVolume(IntWritable volume) {
+	public void LongVolume(LongWritable volume) {
 		this.volume = volume;
 	}
 

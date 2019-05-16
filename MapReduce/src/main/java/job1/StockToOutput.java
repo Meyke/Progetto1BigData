@@ -93,8 +93,10 @@ public class StockToOutput implements WritableComparable {
 		
 	}
 
+	@Override
 	public int compareTo(Object o) {
-		return 0;
+		StockToOutput that = (StockToOutput) o;
+		return this.incrementoPercentuale.compareTo(that.getIncrementoPercentuale()) * (-1); //per avere in ordine decrescente
 	}
 
 	@Override

@@ -3,6 +3,9 @@ package job1;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.hadoop.io.FloatWritable;
 import org.apache.hadoop.io.Text;
@@ -12,20 +15,49 @@ import org.apache.hadoop.mapreduce.Reducer.Context;
 
 public class TopNStocksReducer extends Reducer<Text, Stock, Text, StockToOutput> {
 
+	private List<StockToOutput> topN = new ArrayList<>();
+
 	@Override
 	public void reduce(Text key, Iterable<Stock> values, Context context)
 			throws IOException, InterruptedException {
 
 		ArrayList<Stock> stockOrdinatiPerData = stockOrdinatoPerData(values);
-		Float[] percentage = percentChangeCalculation(stockOrdinatiPerData);
-		Float overallpercChange = overallPercChange(percentage);
+
+		Float percentage = percentChangeCalculation(stockOrdinatiPerData);
+
 		Float maxClosePrice = calcoloMaxPrice(stockOrdinatiPerData);
 		Float minClosePrice = calcoloMinPrice(stockOrdinatiPerData);
 		Float meanvolumedaily = calcoloVolumeMedioGiornaliero(stockOrdinatiPerData);
 		//Write output
-		StockToOutput stock = new StockToOutput(key, new FloatWritable(overallpercChange), new FloatWritable(minClosePrice), new FloatWritable(maxClosePrice), new FloatWritable(meanvolumedaily));
-		context.write(key, stock);
+		StockToOutput stock = new StockToOutput(new Text(key), new FloatWritable(percentage), new FloatWritable(minClosePrice), new FloatWritable(maxClosePrice), new FloatWritable(meanvolumedaily));
+		topN.add(stock);
+		//context.write(key, stock);
 	}
+
+	
+	/**
+    cleanup viene invocato SOLO UNA VOLTA ALLA FINE DI TUTTI I JOB
+	 **/
+	
+	@Override
+	protected void cleanup(Context context) throws IOException, InterruptedException {
+
+		System.out.println("_______A_______" + topN);
+		int count = 0;
+		Collections.sort(topN);
+		System.out.println("_______B_______" + topN);
+		System.out.println("elemento: " +  count + " " + topN.get(0).toString());
+		
+		for(StockToOutput st: topN) {
+			context.write(st.getTicker(), st);
+			count ++;
+			if (count == 10)
+				break;
+		}
+		
+	}
+	
+
 
 
 	private Float calcoloVolumeMedioGiornaliero(ArrayList<Stock> stockOrdinatiPerData) {
@@ -63,42 +95,17 @@ public class TopNStocksReducer extends Reducer<Text, Stock, Text, StockToOutput>
 
 
 	/**
-	 * Tale metodo serve a calcolare come è incrementato (o diminuito) l'incremento percentuale avendo diversi cambi percentuali
-	 * @return
-	 * https://gmatclub.com/forum/excellent-method-for-calculating-successive-percentages-185973.html
-	 */
-	private Float overallPercChange(Float[] percentage) {
-		int N = percentage.length; 
-		float var1, var2, result = 0; 
-
-
-		var1 = percentage[0]; 
-		var2 = percentage[1]; 
-
-		// Calculate successive change of 1st 2 change 
-		result = var1 + var2 + ((var1 * var2) / 100); 
-
-		// Calculate successive change 
-		// for rest of the value 
-		for (int i = 2; i < N; i++) 
-			result = result + percentage[i] + ((result * percentage[i]) / 100); 
-
-		return result; 
-	}
-
-	/**
-	 * Tale metodo serve a calcolare le variazioni percentuali giornaliere. Restituisce un array di variazioni percentuali per quello stock
+	 * Tale metodo serve a calcolare le variazioni percentuali dal 1998 al 2018. 
 	 * Daily Chg = (Price - Prev Day's Close) / Prev Day's Close * 100
+	 * Nel caso l'azienda non fosse presente nel 1998 si prende la prima data utile. Non si considerano picchi intermedi
 	 * @param stockOrdinatiPerData
 	 * https://www.stockcharts.com/docs/doku.php?id=faqs:how_is_percent_change_calulated
 	 */
-	private Float[] percentChangeCalculation(ArrayList<Stock> stockOrdinatiPerData) {
-		Float[] percentage = new Float[stockOrdinatiPerData.size()-1];
-		for(int i = 1; i < stockOrdinatiPerData.size(); i++ ){ 
-			Float prezzoGiornoX = stockOrdinatiPerData.get(i).getClose().get();
-			Float prezzoGiornoPrecX = stockOrdinatiPerData.get(i-1).getClose().get();
-			percentage[i-1] = ((prezzoGiornoX - prezzoGiornoPrecX) / prezzoGiornoPrecX) *100;
-		}
+	private Float percentChangeCalculation(ArrayList<Stock> stockOrdinatiPerData) {
+		Float percentage = new Float(0);
+		Float priceFirstDay1998 = stockOrdinatiPerData.get(0).getClose().get();
+		Float pricelastDay2018 = stockOrdinatiPerData.get(stockOrdinatiPerData.size()-1).getClose().get();
+		percentage = ((pricelastDay2018 - priceFirstDay1998) / priceFirstDay1998) *100;
 		return percentage;
 
 	}

@@ -19,7 +19,7 @@ import org.apache.hadoop.mapreduce.Mapper.Context;
  * @author micheletedesco1
  *
  */
-public class GenerateCoupleMapper2 extends Mapper<LongWritable, Text, StockTrend, Text> {
+public class GenerateCoupleMapper2 extends Mapper<LongWritable, Text, Text, StockTrend> {
 
 	@Override
 	public void map(LongWritable key, Text value, Context context)
@@ -30,7 +30,7 @@ public class GenerateCoupleMapper2 extends Mapper<LongWritable, Text, StockTrend
         String[] items = linea.split("\\t");
 		
         String ticker = items[0];
-        String[] informations = items[1].split(",");
+        String[] informations = items[1].split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
         
         Integer trend2016 = Integer.parseInt(informations[0]);
         Integer trend2017 = Integer.parseInt(informations[1]);
@@ -38,6 +38,7 @@ public class GenerateCoupleMapper2 extends Mapper<LongWritable, Text, StockTrend
         String companyName = informations[3];
         String sector = informations[4];
         
+        Text trendTriennio = new Text(""+ new IntWritable(trend2016) + " " + new IntWritable(trend2017) + " " + new IntWritable(trend2018));
         StockTrend stocktrend = new StockTrend(new Text(ticker), 
         		                                   new IntWritable(trend2016), 
         		                                   new IntWritable(trend2017), 
@@ -45,7 +46,7 @@ public class GenerateCoupleMapper2 extends Mapper<LongWritable, Text, StockTrend
         		                                   new Text(companyName), 
         		                                   new Text(sector));               
 		
-		context.write(stocktrend, new Text(companyName));
+		context.write(trendTriennio, stocktrend);
 		
 	}
 

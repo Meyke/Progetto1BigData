@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.hadoop.io.FloatWritable;
 import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.Reducer.Context;
@@ -27,6 +28,8 @@ import job1.StockToOutput;
 // AHH,11.5299997329712,2013-05-14,stockprice
 
 public class ReducerJoin extends Reducer<Text, Text, Text, Text> {
+	
+	
 
 	// attenzione a non inizializzarli qui, ma dentro il metodo reduce. Infatti l'oggetto reducer viene creato SOLO all'inizio del task
 	// mentre il metodo reduce viene invocato per ogni riga in input del reducer.
@@ -87,7 +90,7 @@ public class ReducerJoin extends Reducer<Text, Text, Text, Text> {
 
 
 	private Stock creaStock(String[] items) {
-		Stock stock = new Stock(new Text(items[1]), new FloatWritable(Float.parseFloat(items[2])), new FloatWritable(), new FloatWritable(), new IntWritable(), new Text(items[3]));
+		Stock stock = new Stock(new Text(items[1]), new FloatWritable(Float.parseFloat(items[2])), new FloatWritable(), new FloatWritable(), new LongWritable(), new Text(items[3]));
 		return stock;
 	}
 

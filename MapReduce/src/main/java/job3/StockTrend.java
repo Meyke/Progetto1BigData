@@ -138,17 +138,18 @@ public class StockTrend implements WritableComparable{
 		int cmp = -1;
 
 		// se hanno stesso trend nei tre anni allora li metto insieme nei values del reducer
-		if(getTrend2016().compareTo(trend2.getTrend2016()) == 0 && getTrend2017().compareTo(trend2.getTrend2017()) == 0 && getTrend2018().compareTo(trend2.getTrend2018()) == 0)
+		if(getTrend2016().get() == trend2.getTrend2016().get() && getTrend2017().get() == trend2.getTrend2017().get() && getTrend2018().get() == trend2.getTrend2018().get())
 			cmp = 0;
 
 		if (cmp!=0)
 			return cmp;
 
-		// tuttavia, devono avere diverso settore e nome
-		cmp = -1;
-		if(getCompanyName().compareTo(trend2.getCompanyName()) != 0 && getSector().compareTo(trend2.getSector()) != 0)
-			cmp = 0;	
-
+		// tuttavia, devono avere diverso settore 
+		//cmp = -1;
+		//if(getSector().toString().equals(trend2.getSector().toString()) == false) {
+		//	cmp = 0;	
+		//	System.out.println("settore1 = "+ getSector().toString() + " settore2 = " + trend2.getSector().toString() + " " + getSector().toString().equals(trend2.getSector().toString()));
+		//}
 		return cmp;
 
 	}
@@ -157,11 +158,9 @@ public class StockTrend implements WritableComparable{
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		
 		int result = 1;
-		result = prime * result + ((trend2016 == null) ? 0 : trend2016.hashCode());
-		result = prime * result + ((trend2017 == null) ? 0 : trend2017.hashCode());
-		result = prime * result + ((trend2018 == null) ? 0 : trend2018.hashCode());
+		result = trend2016.get() + trend2017.get() + trend2018.get();
 		return result;
 	}
 

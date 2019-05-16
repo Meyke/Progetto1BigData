@@ -65,8 +65,8 @@ public class Job3Driver extends Configured implements Tool {
 		job2.setJarByClass(Job3Driver.class);
 		job2.setMapperClass(GenerateCoupleMapper2.class);
 		job2.setReducerClass(GenerateCoupleReducer2.class);
-		job2.setMapOutputKeyClass(StockTrend.class);
-		job2.setMapOutputValueClass(Text.class);
+		job2.setMapOutputKeyClass(Text.class);
+		job2.setMapOutputValueClass(StockTrend.class);
 
 		FileInputFormat.addInputPath(job2, new Path(args[2]));
 		FileOutputFormat.setOutputPath(job2, new Path(args[2] + "/final"));
