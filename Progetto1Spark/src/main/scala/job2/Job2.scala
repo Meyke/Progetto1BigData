@@ -1,55 +1,5 @@
 package job2
 
-import java.util.{Calendar, GregorianCalendar}
-
-import org.apache.spark.{SparkConf, SparkContext}
-import org.apache.spark.rdd.RDD
-import java.text.{ParseException, SimpleDateFormat}
-import java.util.Date
-
-object Job2 {
-  //  val pathToFile1 = "hdfs://localhost:9000/user/daniele/input/historical_stock_prices.csv"
-  //  val pathToFile2 = "hdfs://localhost:9000/user/daniele/input/historical_stocks.csv"
-  var pathToFile1 = "/Users/micheletedesco1/Desktop/job1/historical_stock_prices.csv"
-  var pathToFile2 = "/Users/micheletedesco1/Desktop/job1/historical_stocks.csv"
-  //var outputPath = "file3"
-  /**
-    *  Load the data from the text files and join these
-    */
-
-  def loadDataAndJoin(): RDD[(String,(String, String))] = {
-    // create spark configuration and spark context: the Spark context is the entry point in Spark.
-    // It represents the connexion to Spark and it is the place where you can configure the common properties
-    // like the app name, the master url, memories allocation...
-    val conf = new SparkConf()
-      .setAppName("Job2")
-      .setMaster("local[*]") // here local mode. And * means you will use as much as you have cores.
-
-    val sc = new SparkContext(conf)
-
-    val historical_stock_prices = sc.textFile(pathToFile1)
-      .map(line => (splitIngoringCommas(line)(0), splitIngoringCommas(line)(2)
-        + "," + splitIngoringCommas(line)(6) + "," + splitIngoringCommas(line)(7)))
-
-    val historical_stock = sc.textFile(pathToFile2)
-      .map(line => (splitIngoringCommas(line)(0), splitIngoringCommas(line)(3)))
-
-
-    return historical_stock_prices.join(historical_stock)
-  }
-
-  def splitIngoringCommas(line: String): Array[String] = {
-    line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)")
-  }
-
-  def filterByYear(): RDD[(String,(String, String))] = {
-    val join_result = loadDataAndJoin()
-
-    join_result.filter(line => getYearByDate(splitIngoringCommas(line._2._1)(2)) > 2003)
-  }
-
-package job2
-
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkConf
 import org.apache.spark.rdd.RDD
