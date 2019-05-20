@@ -15,6 +15,7 @@ import org.apache.hadoop.mrunit.mapreduce.MapReduceDriver;
 import org.apache.hadoop.mrunit.mapreduce.ReduceDriver;
 import org.junit.Test;
 
+
 public class TestJob1 {
 
 	@Test
@@ -42,13 +43,13 @@ public class TestJob1 {
 		 */
 		
 		Stock stock1 = new Stock(new Text("AHH"), new FloatWritable((float) 11.6000003814697), new FloatWritable((float) 11.5), 
-				new FloatWritable((float) 11.6000003814697), new IntWritable(277100), new Text("2013-05-10"));
+				new FloatWritable((float) 11.6000003814697), new LongWritable(277100), new Text("2013-05-10"));
 		
 		Stock stock2 = new Stock(new Text("AHH"), new FloatWritable((float) 11.5799999237061), new FloatWritable((float) 11.25), 
-				new FloatWritable((float) 11.6800003051758), new IntWritable(4633900), new Text("2013-05-08"));
+				new FloatWritable((float) 11.6800003051758), new LongWritable(4633900), new Text("2013-05-08"));
 
 		Stock stock3 = new Stock(new Text("AHH"), new FloatWritable((float) 11.5500001907349), new FloatWritable((float) 11.5), 
-				new FloatWritable((float) 11.6599998474121), new IntWritable(275800), new Text("2013-05-09"));
+				new FloatWritable((float) 11.6599998474121), new LongWritable(275800), new Text("2013-05-09"));
 
 
 		values.add(stock1);

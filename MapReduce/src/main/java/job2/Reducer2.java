@@ -50,7 +50,7 @@ public class Reducer2 extends Reducer<Text, Text, Text, Text> {
 		}
 		variazione_percentuale = ((quotazione_fine_anno - quotazione_inizio_anno)/quotazione_inizio_anno)*100;
 		context.write(key, new Text(String.valueOf(volume) + "," + String.valueOf(quotazione) + "," + 
-				String.format(Locale.ROOT, "%.2f", variazione_percentuale) + "," + sector ));
+				String.valueOf(variazione_percentuale) + "," + sector ));
 	}
 	
 	private ArrayList<Text> ordinaPerData(Iterable<Text> values) {
