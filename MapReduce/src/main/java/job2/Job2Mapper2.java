@@ -17,7 +17,6 @@ public class Job2Mapper2 extends Mapper<LongWritable, Text, Text, Text>{
 
 		String line = value.toString();
 		String[] parts = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
-//		String[] parts = line.split(",");
 		context.write(new Text(parts[TICKER]), new Text(parts[SECTOR] + ",table2"));
 	}
 
