@@ -1,32 +1,10 @@
--- Creo la tabella
--- Con skip.header.line.count salto l'header del csv
-
-CREATE EXTERNAL TABLE hist_prices (
-ticker STRING,
-open FLOAT,
-close FLOAT,
-adj_close FLOAT,
-low FLOAT,
-high FLOAT,
-volume INT,
-ymd STRING)
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
-tblproperties ("skip.header.line.count"="1");
-
-
--- carico il csv (la tabella punterà a quel csv)
-
-LOAD DATA LOCAL INPATH '/Users/micheletedesco1/Desktop/job1/historical_stock_prices.csv'
-OVERWRITE INTO TABLE hist_prices;
-
-
 -- filtro per anno e ordino per ticker e data
 DROP table filterOnYearAndOrder;
 CREATE TABLE filterOnYearAndOrder AS
 SELECT ticker, ymd, close, volume
 FROM hist_prices
-WHERE YEAR(TO_DATE(FROM_UNIXTIME(UNIX_TIMESTAMP(ymd, 'yyyy-MM-dd')))) > 1998 AND
-YEAR(TO_DATE(FROM_UNIXTIME(UNIX_TIMESTAMP(ymd, 'yyyy-MM-dd')))) < 2018
+WHERE year >= 1998 AND
+year <= 2018
 ORDER BY ticker, ymd;
 
 -- prendo primo e ultimo giorno per ogni ticker
@@ -59,7 +37,7 @@ GROUP by ticker;
 
 -- join con prezzo iniziale e finale e calcolo incremento percentuale
 DROP TABLE finalResult;
-CREATE TABLE finalResult AS
+CREATE TABLE finalResult ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' AS
 SELECT ar.ticker, (((ep.end_price - sp.start_price)/sp.start_price)*100) as incremento_percentuale, ar.min_low, ar.max_high, ar.mean_volume
 FROM aggregateResult ar, startPrice sp, endPrice ep
 WHERE ar.ticker = sp.ticker AND ar.ticker = ep.ticker
