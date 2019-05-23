@@ -1,6 +1,7 @@
 package job3
 
 import job1.{DateOrdering, StockPrice}
+import logger.MyLogger
 import org.apache.spark.{HashPartitioner, SparkConf, SparkContext}
 import org.apache.spark.rdd.RDD
 
@@ -15,8 +16,9 @@ object ThreeYearTrend {
 
   val sc = new SparkContext(conf)
 
-  val pathToFile1 = "/Users/micheletedesco1/Desktop/job1/historical_stock_prices.csv"
-  val pathToFile2 = "/Users/micheletedesco1/Desktop/job1/historical_stocks.csv"
+  var pathToFile1 = "/Users/micheletedesco1/Desktop/job1/historical_stock_prices.csv"
+  var pathToFile2 = "/Users/micheletedesco1/Desktop/job1/historical_stocks.csv"
+  var outputPath = "/Users/micheletedesco1/Desktop/risultati-screenshot/output"
 
   val creaStockRDD = (st: Array[String]) => {
     StockPrice(st(0), st(1).toFloat, st(2).toFloat, st(3).toFloat, st(4).toFloat, st(5).toFloat, st(6).toLong, st(7))
@@ -134,8 +136,20 @@ object ThreeYearTrend {
                        )
 
   def main(args: Array[String]): Unit = {
-    ThreeYearTrend.coppieAziendeSettoriDiversiTrend().take(8000).foreach(println)
-    //ThreeYearTrend.loadData2().take(100).foreach(println)
+    var startTime = System.currentTimeMillis()
+
+    val log = new MyLogger(this.getClass, 3)
+    log.appenderLogger()
+
+    pathToFile1 = args(0)
+    pathToFile2 = args(1)
+    outputPath = args(2)
+
+    ThreeYearTrend.coppieAziendeSettoriDiversiTrend().coalesce(1).saveAsTextFile(outputPath)
+
+    log.timeLog((System.currentTimeMillis() - startTime) / 1000.0)
+    //ThreeYearTrend.coppieAziendeSettoriDiversiTrend().take(8000).foreach(println)
+
   }
 
 }

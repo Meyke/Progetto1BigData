@@ -11,16 +11,24 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+
+import job1.TopNPriceChanges;
 
 public class Job2Driver extends Configured implements Tool {
 	
+	static final Logger mylogger = Logger.getLogger(Job2Driver.class);
+	
 	public static void main(String[] args) throws Exception {
 		
-		if (args.length != 3) {
-			System.err.println("Usage: Job2Driver <input path> <input path> <output path>");
-			System.exit(-1);
-		}
+		long startTime = System.currentTimeMillis();
+		mylogger.setLevel(Level.INFO);
+		appenderLogger();
 		ToolRunner.run(new Job2Driver(), args);
+		mylogger.info("TEMPO DI ESECUZIONE JOB1 " + (System.currentTimeMillis() - startTime) / 1000.0 + " secondi");
 	
 	}
 	
@@ -83,6 +91,19 @@ public class Job2Driver extends Configured implements Tool {
 		job3.waitForCompletion(true);
 
 		return 0;
+	}
+	
+	private static void appenderLogger() {
+		FileAppender fa = new FileAppender();
+		fa.setName("FileLogger"); //nome appender
+		fa.setFile("mylog.log"); // nome file
+		fa.setLayout(new PatternLayout("%d %-5p [%c{1}] %m%n"));
+		fa.setThreshold(Level.INFO);
+		fa.setAppend(true);
+		fa.activateOptions();
+		Logger.getRootLogger().addAppender(fa);
+		mylogger.info("---------INIZIO JOB2 HADOOP-----------");
+		
 	}
 
 }

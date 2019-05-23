@@ -10,15 +10,27 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+
 
 
 public class TopNPriceChanges {
 
+	static final Logger mylogger = Logger.getLogger(TopNPriceChanges.class);
+	
 	public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
-		if (args.length != 2) {
-			System.err.println("Usage: TopNPriceChanges <input path> <output path>");
-			System.exit(-1);
-		}
+		//if (args.length != 2) {
+		//	System.err.println("Usage: TopNPriceChanges <input path> <output path>");
+		//	System.exit(-1);
+		//}
+		
+		//Logger per registrare i tempi di esecuzione del job
+		long startTime = System.currentTimeMillis();
+		mylogger.setLevel(Level.INFO);
+		appenderLogger();
 
 		//Define MapReduce job
 		Configuration conf = new Configuration();
@@ -47,7 +59,23 @@ public class TopNPriceChanges {
 		job.setOutputValueClass(StockToOutput.class);
 
 		//Submit job
-		System.exit(job.waitForCompletion(true) ? 0 : 1); // se true vediamo l'esecuzione del job su console
+		job.waitForCompletion(true); // se true vediamo l'esecuzione del job su console
+		
+		
+		mylogger.info("TEMPO DI ESECUZIONE JOB1 " + (System.currentTimeMillis() - startTime) / 1000.0 + " secondi");
+	}
+
+	private static void appenderLogger() {
+		FileAppender fa = new FileAppender();
+		fa.setName("FileLogger"); //nome appender
+		fa.setFile("mylog.log"); // nome file
+		fa.setLayout(new PatternLayout("%d %-5p [%c{1}] %m%n"));
+		fa.setThreshold(Level.INFO);
+		fa.setAppend(true);
+		fa.activateOptions();
+		Logger.getRootLogger().addAppender(fa);
+		mylogger.info("---------INIZIO JOB1 HADOOP-----------");
+		
 	}
 
 }

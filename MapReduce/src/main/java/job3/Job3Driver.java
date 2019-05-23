@@ -15,27 +15,39 @@ import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 
 import job1.Stock;
+import job1.TopNPriceChanges;
 
 import org.apache.hadoop.mapreduce.Job;
 
 
 public class Job3Driver extends Configured implements Tool {
 
-	
+	static final Logger mylogger = Logger.getLogger(Job3Driver.class);
 
 	public static void main(String[] args) throws Exception {
-		if (args.length != 3) {
-			System.err.println("Usage: Job3Driver <input path> <input path> <output path>");
-			System.exit(-1);
-		}
+		//Logger per registrare i tempi di esecuzione del job
+		long startTime = System.currentTimeMillis();
+		mylogger.setLevel(Level.INFO);
+		appenderLogger();
+		//if (args.length != 3) {
+		//	System.err.println("Usage: Job3Driver <input path> <input path> <output path>");
+		//	System.exit(-1);
+		//}
+
 		ToolRunner.run(new Job3Driver(), args);
+		
+		mylogger.info("TEMPO DI ESECUZIONE JOB1 " + (System.currentTimeMillis() - startTime) / 1000.0 + " secondi");
 	}
 
-	
+
 	public int run(String[] args) throws Exception {
-	
+
 
 		Configuration conf = new Configuration();
 		Job job1 = Job.getInstance(conf);
@@ -77,6 +89,19 @@ public class Job3Driver extends Configured implements Tool {
 		job2.waitForCompletion(true);
 
 		return 0;
+	}
+	
+	private static void appenderLogger() {
+		FileAppender fa = new FileAppender();
+		fa.setName("FileLogger"); //nome appender
+		fa.setFile("mylog.log"); // nome file
+		fa.setLayout(new PatternLayout("%d %-5p [%c{1}] %m%n"));
+		fa.setThreshold(Level.INFO);
+		fa.setAppend(true);
+		fa.activateOptions();
+		Logger.getRootLogger().addAppender(fa);
+		mylogger.info("---------INIZIO JOB3 HADOOP-----------");
+		
 	}
 
 
