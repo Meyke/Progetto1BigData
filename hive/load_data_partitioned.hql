@@ -11,7 +11,7 @@ ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
 WITH SERDEPROPERTIES (
    "separatorChar" = ",",
    "quoteChar"     = "\"");
-LOAD DATA LOCAL INPATH './home/daniele/Documenti/data/historical_stocks.csv' OVERWRITE INTO TABLE hist_stocks;
+LOAD DATA LOCAL INPATH '/home/daniele/Documenti/data/historical_stocks.csv' OVERWRITE INTO TABLE hist_stocks;
 
 DROP TABLE temp_hist_prices;
 CREATE TABLE temp_hist_prices (
@@ -25,7 +25,7 @@ volume INT,
 ymd STRING)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 tblproperties ("skip.header.line.count"="1");
-LOAD DATA LOCAL INPATH './home/daniele/Documenti/data/historical_stock_prices.csv' OVERWRITE INTO TABLE temp_hist_prices;
+LOAD DATA LOCAL INPATH '/home/daniele/Documenti/data/historical_stock_prices.csv' OVERWRITE INTO TABLE temp_hist_prices;
 
 DROP TABLE hist_prices;
 CREATE TABLE hist_prices (
@@ -39,4 +39,4 @@ volume INT,
 ymd STRING)
 PARTITIONED BY ( year INT )
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
-INSERT into  hist_prices PARTITION(year) SELECT ticker, open, close, adj_close, low, high, volume, ymd, YEAR(ymd) FROM temp_hist_prices;
+INSERT into  hist_prices PARTITION(year) SELECT ticker, open, close, adj_close, low, high, volume, ymd, YEAR(ymd) FROM temp_hist_prices WHERE YEAR(ymd) > 1997;
