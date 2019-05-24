@@ -11,7 +11,7 @@ ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
 WITH SERDEPROPERTIES (
    "separatorChar" = ",",
    "quoteChar"     = "\"");
-LOAD DATA LOCAL INPATH './home/daniele/Documenti/data/historical_stocks.csv' OVERWRITE INTO TABLE hist_stocks;
+LOAD DATA LOCAL INPATH '/home/daniele/Documenti/data/historical_stocks.csv' OVERWRITE INTO TABLE hist_stocks;
 
 DROP TABLE hist_prices;
 CREATE TABLE hist_prices (
@@ -25,4 +25,4 @@ volume INT,
 ymd STRING)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 tblproperties ("skip.header.line.count"="1");
-LOAD DATA LOCAL INPATH './home/daniele/Documenti/data/historical_stock_prices.csv' OVERWRITE INTO TABLE hist_prices;
+LOAD DATA LOCAL INPATH '/home/daniele/Documenti/data/historical_stock_prices.csv' OVERWRITE INTO TABLE hist_prices;

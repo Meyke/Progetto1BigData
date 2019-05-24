@@ -35,10 +35,10 @@ SELECT ticker, min(close) as min_low, max(close) as max_high, (sum(volume)/count
 FROM filterOnYearAndOrder
 GROUP by ticker;
 
--- join con prezzo iniziale e finale e calcolo incremento percentuale
+-- join con prezzo iniziale e finale e calcolo variazione percentuale
 DROP TABLE finalResult;
 CREATE TABLE finalResult ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' AS
-SELECT ar.ticker, (((ep.end_price - sp.start_price)/sp.start_price)*100) as incremento_percentuale, ar.min_low, ar.max_high, ar.mean_volume
+SELECT ar.ticker, (((ep.end_price - sp.start_price)/sp.start_price)*100) as variazione_percentuale, ar.min_low, ar.max_high, ar.mean_volume
 FROM aggregateResult ar, startPrice sp, endPrice ep
 WHERE ar.ticker = sp.ticker AND ar.ticker = ep.ticker
-ORDER BY incremento_percentuale desc limit 10;
+ORDER BY variazione_percentuale desc limit 10;

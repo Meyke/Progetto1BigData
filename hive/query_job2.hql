@@ -37,13 +37,13 @@ GROUP by ticker, year;
 
 DROP TABLE variazioneResult;
 CREATE TABLE variazioneResult AS
-SELECT ar.ticker, ar.year, (((ep.end_price - sp.start_price)/sp.start_price)*100) as incremento_percentuale, ar.sum_close, ar.sum_volume
+SELECT ar.ticker, ar.year, (((ep.end_price - sp.start_price)/sp.start_price)*100) as variazione_percentuale, ar.sum_close, ar.sum_volume
 FROM aggregateResult ar, startPrice sp, endPrice ep
 WHERE ar.ticker = sp.ticker AND ar.ticker = ep.ticker AND ar.year = sp.year AND ar.year = ep.year;
 
 DROP TABLE finalResult;
 CREATE TABLE finalResult ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' AS
-SELECT hs.sector, vr.year, sum(vr.sum_volume), sum(vr.sum_close), sum(vr.incremento_percentuale)
+SELECT hs.sector, vr.year, sum(vr.sum_volume), sum(vr.sum_close), sum(vr.variazione_percentuale)
 FROM variazioneResult vr, hist_stocks hs
 WHERE vr.ticker = hs.ticker 
 GROUP BY hs.sector, vr.year

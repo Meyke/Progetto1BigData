@@ -50,7 +50,7 @@ CREATE TABLE variazioneResult ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.Op
 WITH SERDEPROPERTIES (
    "separatorChar" = ",",
    "quoteChar"     = "\"") AS
-SELECT hs.name as name, v1.year as year1, round(v1.variazione_percentuale,0) as variazione1, v2.year as year2, round(v2.variazione_percentuale,0) as variazione2, v3.year as year3, round(v3.variazione_percentuale,0) as variazione3
+SELECT hs.name as name, hs.sector as sector, v1.year as year1, round(v1.variazione_percentuale,0) as variazione1, v2.year as year2, round(v2.variazione_percentuale,0) as variazione2, v3.year as year3, round(v3.variazione_percentuale,0) as variazione3
 FROM variazioneFor2016Result v1, variazioneFor2017Result v2, variazioneFor2018Result v3, hist_stocks hs
 WHERE v1.ticker = v2.ticker AND v2.ticker = v3.ticker AND v1.ticker = hs.ticker;
 
@@ -61,5 +61,5 @@ WITH SERDEPROPERTIES (
    "quoteChar"     = "\"") AS
 SELECT vr1.name as name1, vr2.name as name2, vr1.variazione1, vr1.variazione2, vr1.variazione3
 FROM variazioneResult vr1, variazioneResult vr2
-WHERE vr1.variazione1 = vr2.variazione1 AND vr1.variazione2 = vr2.variazione2 AND vr1.variazione3 = vr2.variazione3 AND vr1.name <> vr2.name
+WHERE vr1.variazione1 = vr2.variazione1 AND vr1.variazione2 = vr2.variazione2 AND vr1.variazione3 = vr2.variazione3 AND vr1.sector <> vr2.sector AND vr1.name <> vr2.name
 ORDER BY vr1.variazione1, vr1.variazione2, vr1.variazione3;
