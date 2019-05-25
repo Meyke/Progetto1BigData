@@ -1,97 +1,64 @@
-{\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf500
-{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;}
-{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red27\green31\blue34;\red255\green255\blue255;
-\red91\green40\blue180;}
-{\*\expandedcolortbl;;\csgray\c0;\cssrgb\c14118\c16078\c18039;\cssrgb\c100000\c100000\c100000;
-\cssrgb\c43529\c25882\c75686;}
-\paperw11900\paperh16840\margl1440\margr1440\vieww23260\viewh8400\viewkind0
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+Cluster emr con macchine tutte m3.xlarge
 
-\f0\fs22 \cf2 \CocoaLigature0 Cluster emr con macchine tutte m3.xlarge\
-\
-Per connettermi al master node del cluster tramite ssh:\
-ssh -i keypairMeyke.pem hadoop@<dns_pubblico-master>\
-\
-\
-Per trasferire i file su cluster usa scp (secure copy. Vedere https://kb.iu.edu/d/agye):\
-scp -i keypairMeyke.pem -r /Users/micheletedesco1/Desktop/job1 hadoop@<dns_pubblico-master>:~     (:~ indica il percorso (home/hadoop) del nodo remoto in cui vado a trasferire i file)\
-\
-NEL CASO NON SI CONNETTESSE CON SSH, MODIFICARE LE INBOUND RULES:\
-https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-gs-ssh.html \
-\
-\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97 LOAD DATASETS \'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\
-\
-CARICARE I FILE INPUT SU HDFS:\
-\pard\pardeftab720\sl400\partightenfactor0
+Per connettermi al master node del cluster tramite ssh:
+ssh -i keypairMeyke.pem hadoop@<dns_pubblico-master>
 
-\fs24 \cf3 \expnd0\expndtw0\kerning0
-\CocoaLigature1 hadoop fs -mkdir -p /user/input\
-hadoop fs -copyFromLocal Desktop/input/ /user/input\
-\
---Delete output directory\
+
+Per trasferire i file su cluster usa scp (secure copy. Vedere https://kb.iu.edu/d/agye):
+scp -i keypairMeyke.pem -r /Users/micheletedesco1/Desktop/job1 hadoop@<dns_pubblico-master>:~     (:~ indica il percorso (home/hadoop) del nodo remoto in cui vado a trasferire i file)
+
+NEL CASO NON SI CONNETTESSE CON SSH, MODIFICARE LE INBOUND RULES:
+https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-gs-ssh.html 
+
+———————————————————————————————————————————————————————————————————— LOAD DATASETS ————————————————————————————————————————————————————————————————————
+
+CARICARE I FILE INPUT SU HDFS:
+hadoop fs -mkdir -p /user/input
+hadoop fs -copyFromLocal Desktop/input/ /user/input
+
+--Delete output directory
 hadoop fs -rm -r /user/output
-\fs22 \cf2 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
 
-\itap1\trowd \taflags1 \trgaph108\trleft-108 \trcbpat4 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
-\clmgf \clvertalt \clshdrawnil \clwWidth3579\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl200 \clpadr200 \gaph\cellx4320
-\clmrg \clvertalt \clshdrawnil \clwWidth3579\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl200 \clpadr200 \gaph\cellx8640
-\pard\intbl\itap1\pardeftab720\sl400\partightenfactor0
+In tutti i casi seguenti, sia Spark che Hadoop, i dataset di input si trovano su HDFS.
 
-\fs24 \cf3 \expnd0\expndtw0\kerning0
-\CocoaLigature1 \cell 
-\pard\intbl\itap1\cell \lastrow\row
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
 
-\fs22 \cf2 \kerning1\expnd0\expndtw0 \CocoaLigature0 In tutti i casi seguenti, sia Spark che Hadoop, i dataset di input si trovano su HDFS.\
-\
-\
-\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97 HADOOP \'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\
-HADOOP JOB1 (cluster aws emr):\
-\
-hadoop jar job1/job1.jar job1.TopNPriceChanges /user/input/hist_price_1perc.csv /user/output -libjars job1/lib/log4j-1.2.17.jar\
-hadoop jar job1/job1.jar job1.TopNPriceChanges /user/input/hist_price_10perc.csv /user/output -libjars job1/lib/log4j-1.2.17.jar\
-hadoop jar job1/job1.jar job1.TopNPriceChanges /user/input/historical_stock_prices.csv /user/output -libjars job1/lib/log4j-1.2.17.jar\
-\
-\
-HADOOP job2:\
-hadoop jar job1/job1.jar job2.Job2Driver /user/input/hist_price_1perc.csv /user/input/historical_stocks.csv /user/output -libjars job1/lib/log4j-1.2.17.jar\
-hadoop jar job1/job1.jar job2.Job2Driver /user/input/hist_price_10perc.csv /user/input/historical_stocks.csv /user/output -libjars job1/lib/log4j-1.2.17.jar\
-hadoop jar job1/job1.jar job2.Job2Driver /user/input/historical_stock_prices.csv /user/input/historical_stocks.csv /user/output -libjars job1/lib/log4j-1.2.17.jar\
-\
-\
-HADOOP job3:\
-\
-hadoop jar job1/job1.jar job3.Job3Driver /user/input/hist_price_1perc.csv /user/input/historical_stocks.csv /user/output -libjars Desktop/job1/lib/log4j-1.2.17.jar\
-hadoop jar job1/job1.jar job3.Job3Driver /user/input/hist_price_10perc.csv /user/input/historical_stocks.csv /user/output -libjars Desktop/job1/lib/log4j-1.2.17.jar\
-hadoop jar job1/job1.jar job3.Job3Driver /user/input/historical_stock_prices.csv /user/input/historical_stocks.csv /user/output -libjars Desktop/job1/lib/log4j-1.2.17.jar\
-\
-\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97 SPARK \'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\
-\
---master yarn posso anche non metterlo (gi\'e0 settato di default nella conf di spark di emr)\
-\
-SPARK job1:\
-spark-submit --class job1.TenBestAction9818 job1/progetto1spark_2.11-0.1.jar /user/input/job1/hist_price_1perc.csv\
-spark-submit --class job1.TenBestAction9818 job1/progetto1spark_2.11-0.1.jar /user/input/job1/hist_price_10perc.csv\
-spark-submit --class job1.TenBestAction9818 job1/progetto1spark_2.11-0.1.jar /user/input/job1/historical_stock_prices.csv\
-\
-\
-SPARK job2:\
-spark-submit --class job2Daniele.Job2 job1/progetto1spark_2.11-0.1.jar /user/input/job1/hist_price_1perc.csv /user/input/job1/historical_stocks.csv /user/output\
-spark-submit --class job2Daniele.Job2 job1/progetto1spark_2.11-0.1.jar /user/input/job1/hist_price_10perc.csv /user/input/job1/historical_stocks.csv /user/output\
-spark-submit --class job2Daniele.Job2 job1/progetto1spark_2.11-0.1.jar /user/input/job1/historical_stock_prices.csv /user/input/job1/historical_stocks.csv /user/output\
-\
-SPARK job3:\
-spark-submit --class job3.
-\fs24 \cf5 \cb4 \expnd0\expndtw0\kerning0
-\CocoaLigature1 ThreeYearTrend
-\fs22 \cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0  job1/progetto1spark_2.11-0.1.jar /user/input/job1/hist_price_1perc.csv /user/input/job1/historical_stocks.csv /user/output\
-spark-submit --class job3.
-\fs24 \cf5 \cb4 \expnd0\expndtw0\kerning0
-\CocoaLigature1 ThreeYearTrend
-\fs22 \cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0  job1/progetto1spark_2.11-0.1.jar /user/input/job1/hist_price_10perc.csv /user/input/job1/historical_stocks.csv /user/output\
-spark-submit --class job3.
-\fs24 \cf5 \cb4 \expnd0\expndtw0\kerning0
-\CocoaLigature1 ThreeYearTrend
-\fs22 \cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0  job1/progetto1spark_2.11-0.1.jar /user/input/job1/historical_stock_prices.csv /user/input/job1/historical_stocks.csv /user/output\
-\
-}
+———————————————————————————————————————————————————————————————————— HADOOP ————————————————————————————————————————————————————————————————————
+HADOOP JOB1 (cluster aws emr):
+
+hadoop jar job1/job1.jar job1.TopNPriceChanges /user/input/hist_price_1perc.csv /user/output -libjars job1/lib/log4j-1.2.17.jar
+hadoop jar job1/job1.jar job1.TopNPriceChanges /user/input/hist_price_10perc.csv /user/output -libjars job1/lib/log4j-1.2.17.jar
+hadoop jar job1/job1.jar job1.TopNPriceChanges /user/input/historical_stock_prices.csv /user/output -libjars job1/lib/log4j-1.2.17.jar
+
+
+HADOOP job2:
+hadoop jar job1/job1.jar job2.Job2Driver /user/input/hist_price_1perc.csv /user/input/historical_stocks.csv /user/output -libjars job1/lib/log4j-1.2.17.jar
+hadoop jar job1/job1.jar job2.Job2Driver /user/input/hist_price_10perc.csv /user/input/historical_stocks.csv /user/output -libjars job1/lib/log4j-1.2.17.jar
+hadoop jar job1/job1.jar job2.Job2Driver /user/input/historical_stock_prices.csv /user/input/historical_stocks.csv /user/output -libjars job1/lib/log4j-1.2.17.jar
+
+
+HADOOP job3:
+
+hadoop jar job1/job1.jar job3.Job3Driver /user/input/hist_price_1perc.csv /user/input/historical_stocks.csv /user/output -libjars Desktop/job1/lib/log4j-1.2.17.jar
+hadoop jar job1/job1.jar job3.Job3Driver /user/input/hist_price_10perc.csv /user/input/historical_stocks.csv /user/output -libjars Desktop/job1/lib/log4j-1.2.17.jar
+hadoop jar job1/job1.jar job3.Job3Driver /user/input/historical_stock_prices.csv /user/input/historical_stocks.csv /user/output -libjars Desktop/job1/lib/log4j-1.2.17.jar
+
+———————————————————————————————————————————————————————————————————— SPARK ————————————————————————————————————————————————————————————————————
+
+--master yarn posso anche non metterlo (già settato di default nella conf di spark di emr)
+
+SPARK job1:
+spark-submit --class job1.TenBestAction9818 job1/progetto1spark_2.11-0.1.jar /user/input/job1/hist_price_1perc.csv
+spark-submit --class job1.TenBestAction9818 job1/progetto1spark_2.11-0.1.jar /user/input/job1/hist_price_10perc.csv
+spark-submit --class job1.TenBestAction9818 job1/progetto1spark_2.11-0.1.jar /user/input/job1/historical_stock_prices.csv
+
+
+SPARK job2:
+spark-submit --class job2Daniele.Job2 job1/progetto1spark_2.11-0.1.jar /user/input/job1/hist_price_1perc.csv /user/input/job1/historical_stocks.csv /user/output
+spark-submit --class job2Daniele.Job2 job1/progetto1spark_2.11-0.1.jar /user/input/job1/hist_price_10perc.csv /user/input/job1/historical_stocks.csv /user/output
+spark-submit --class job2Daniele.Job2 job1/progetto1spark_2.11-0.1.jar /user/input/job1/historical_stock_prices.csv /user/input/job1/historical_stocks.csv /user/output
+
+SPARK job3:
+spark-submit --class job3.ThreeYearTrend job1/progetto1spark_2.11-0.1.jar /user/input/job1/hist_price_1perc.csv /user/input/job1/historical_stocks.csv /user/output
+spark-submit --class job3.ThreeYearTrend job1/progetto1spark_2.11-0.1.jar /user/input/job1/hist_price_10perc.csv /user/input/job1/historical_stocks.csv /user/output
+spark-submit --class job3.ThreeYearTrend job1/progetto1spark_2.11-0.1.jar /user/input/job1/historical_stock_prices.csv /user/input/job1/historical_stocks.csv /user/output
+
