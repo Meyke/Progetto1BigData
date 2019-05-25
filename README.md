@@ -5,36 +5,41 @@ Il seguente progetto ha lo scopo di mettere a confronto 3 tecnologie per la gest
 ### Organizzazione repository
 
 Questa repository è organizzata in 3 cartelle:
-* MapReduce, in cui sono affrontati i 3 job con Hadoop MapReduce;
-* Hive, bla bla bla
-* Spark, bla bla bla
+* [MapReduce](https://github.com/Meyke/Progetto1BigData/tree/master/MapReduce);
+* [Hive](https://github.com/Meyke/Progetto1BigData/tree/master/hive);
+* [Spark](https://github.com/Meyke/Progetto1BigData/tree/master/Progetto1Spark);
 
-### Prerequisiti
+In ogni cartella è presente il codice sorgente per ognuno dei Job.
 
-bla bla bla 
+Inoltre, è presente la cartella [jarsForQuickExecution](https://github.com/Meyke/Progetto1BigData/tree/master/jarsForQuickExecution), in cui sono presenti i jars dei progetti per Hadoop e Spark, e un file di testo che indica come eseguire tali jars.
 
 
 ### Installing
 
-bla bla bla
+Se si vogliono eseguire i job in locale è necessario installarsi la Java JDK 8 o successive, Apache Hadoop (3.1.2 o successive), Apache Hive (2.3.4 o successive), Apache Spark (2.4.0 o successive) 
 
-## Running the tests
 
-bla bla bla
+### Tests
 
-### Risultati
-
-bla bla bla
+Sono stati eseguiti test di efficienza per ognuno dei job, confrontando i tempi di esecuzione in locale rispetto ai tempi di esecuzione su cluster, con dimensioni del dataset e del cluster via via crescenti.
 
 
 ## Built With
 
 * [Maven](https://maven.apache.org/) - Dependency Management
+* [Sbt](https://www.scala-sbt.org) - The interactive build tool
 
 ## Authors
 
-<img src="images/logo.png" width="500" height="650" class="center">
+<p align="center">
+<img src="images/logo.png" width="500" height="650">
+</p>
 
+che poi sarebbero **Michele Tedesco** e **Daniele Caldarini**
+
+## Bibliografia
+
+Slides del [corso](http://torlone.dia.uniroma3.it/bigdata/materiale.html)
 
 
 
