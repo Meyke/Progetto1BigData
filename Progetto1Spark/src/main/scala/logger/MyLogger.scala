@@ -25,7 +25,7 @@ class MyLogger(var c: Class[_], var numJob: Int) {
   }
 
   def timeLog (time: Double): Unit= {
-    mylogger.info("TEMPO DI ESECUZIONE JOB1 " + time + " secondi")
+    mylogger.info("TEMPO DI ESECUZIONE JOB " + time + " secondi")
 
   }
 

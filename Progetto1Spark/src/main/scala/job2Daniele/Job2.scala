@@ -11,16 +11,12 @@ import logger.MyLogger
 
 object Job2 {
 
-  var pathToFile1 = "/Users/micheletedesco1/Desktop/job1/historical_stock_prices.csv"
-  var pathToFile2 = "/Users/micheletedesco1/Desktop/job1/historical_stocks.csv"
-  var outputPath = "/Users/micheletedesco1/Desktop/risultati-screenshot/output"
+  var pathToFile1 = ""
+  var pathToFile2 = ""
+  var outputPath = ""
 
+  var sc: SparkContext = null
 
-  val conf = new SparkConf()
-    .setAppName("Job2")
-    .setMaster("local[*]") // here local mode. And * means you will use as much as you have cores.
-
-  val sc = new SparkContext(conf)
 
   def loadData1(): RDD[(String, String)] = {
 
@@ -148,9 +144,16 @@ object Job2 {
     val log = new MyLogger(this.getClass, 2)
     log.appenderLogger()
 
+
     pathToFile1 = args(0)
     pathToFile2 = args(1)
     outputPath = args(2)
+
+    val conf = new SparkConf()
+      .setAppName("Job2")
+    //.setMaster("local[*]") // here local mode. And * means you will use as much as you have cores.
+
+    sc = new SparkContext(conf)
 
     Job2.reduceBySectorAndYear().coalesce(1).saveAsTextFile(outputPath)
 

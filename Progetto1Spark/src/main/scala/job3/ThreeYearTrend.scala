@@ -9,16 +9,11 @@ import org.apache.spark.rdd.RDD
 
 object ThreeYearTrend {
 
-  // Create the spark configuration and spark context
-  val conf = new SparkConf()
-    .setAppName("Job1")
-    .setMaster("local[*]")
+  var pathToFile1 = ""
+  var pathToFile2 = ""
+  var outputPath = ""
 
-  val sc = new SparkContext(conf)
-
-  var pathToFile1 = "/Users/micheletedesco1/Desktop/job1/historical_stock_prices.csv"
-  var pathToFile2 = "/Users/micheletedesco1/Desktop/job1/historical_stocks.csv"
-  var outputPath = "/Users/micheletedesco1/Desktop/risultati-screenshot/output"
+  var sc: SparkContext = null
 
   val creaStockRDD = (st: Array[String]) => {
     StockPrice(st(0), st(1).toFloat, st(2).toFloat, st(3).toFloat, st(4).toFloat, st(5).toFloat, st(6).toLong, st(7))
@@ -144,6 +139,13 @@ object ThreeYearTrend {
     pathToFile1 = args(0)
     pathToFile2 = args(1)
     outputPath = args(2)
+
+    // Create the spark configuration and spark context
+    val conf = new SparkConf()
+      .setAppName("Job3")
+    //.setMaster("local[*]")
+
+    ThreeYearTrend.sc = new SparkContext(conf)
 
     ThreeYearTrend.coppieAziendeSettoriDiversiTrend().coalesce(1).saveAsTextFile(outputPath)
 

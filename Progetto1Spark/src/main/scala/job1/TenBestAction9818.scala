@@ -33,7 +33,7 @@ object TenBestAction9818 {
     // Create the spark configuration and spark context
     val conf = new SparkConf()
       .setAppName("Job1")
-      .setMaster("local[*]")
+    //.setMaster("local[*]") Togliere perchè sovrascrive --master di spark-submit.
 
     val sc = new SparkContext(conf)
 
